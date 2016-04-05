@@ -2,78 +2,60 @@ package boitzo;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Date;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import boitzo.Problem.Condition;
 import boitzo.Problem.RELATION;
 
 public class ProblemConverter {
 
 	public Problem primitiveToDual(Problem primitive) {
-		Problem dual = new Problem();
-		int primitiveCondCounter = 0;
-		//zamiana nierownosci(bez znakow relacji i z prawej)
-		for(;;) {
-			boolean goNextLoop = false;
-			Condition dualCond = dual.new Condition(new Double[primitive.getConditions().size()], null, 0);
-			int dualCondCounter = 0;
-			for(Condition primitiveCond : primitive.getConditions()) {
-				double value;
-				try {
-					value = primitiveCond.getLeftHandValues().get(primitiveCondCounter);
-					goNextLoop = true;
-				} catch(IndexOutOfBoundsException e) {
-					value = 0;
+		Double[][] conds = primitive.getConditions();
+		Problem dual = new Problem(conds[0].length, conds.length);
+		for(int i=0 ; i<conds.length ; ++i) {
+			for(int j=0 ; j<conds[0].length ; ++j) {
+				if(conds[i][j] == Double.MAX_VALUE) {
+					dual.getConditions()[j][i] = Double.MIN_VALUE;
+				} else if(conds[i][j] == Double.MIN_VALUE) {
+					dual.getConditions()[j][i] = Double.MAX_VALUE;
+				} else {
+					dual.getConditions()[j][i] = conds[i][j];
 				}
-				dualCond.getLeftHandValues().set(dualCondCounter++, value);
-			}
-			++primitiveCondCounter;
-			if(!goNextLoop) {
-				break;
 			}
 		}
-		//
-		for(Condition variableSignCond : primitive.getConditions()) {
-			int counter = 0;
-			for(;;) {
-				double value;
-				try {
-					value = variableSignCond.getLeftHandValues().get(counter++);
-				} catch(IndexOutOfBoundsException e) {
+		for(int i=0 ; i<primitive.getRelations().length ; ++i) {
+			RELATION rel = primitive.getRelations()[i];
+			switch(rel) {
+				case EQUAL: {
+					dual.getRelations()[i] = RELATION.ANY;
 					break;
 				}
-				if(value == 1) {
-					RELATION newRelation = variableSignCond.getRelation();
-					if(variableSignCond.getRelation() == RELATION.EQUAL) {
-						newRelation = RELATION.ANY;
-					} else if(variableSignCond.getRelation() == RELATION.ANY) {
-						newRelation = RELATION.EQUAL;
-					}
-					dual.getConditions().get(counter).setRelation(newRelation);
+				case ANY: {
+					dual.getRelations()[i] = RELATION.EQUAL;
 					break;
+				}
+				default: {
+					dual.getRelations()[i] = rel;
 				}
 			}
 		}
 		return dual;
 	}
-	
-	public Problem dualToPrimitive() {
-		return null;
-	}
-	
-	public void saveToFile(String fileName, Problem problem) {
+
+	public void saveToFile(Problem problem, String fileName) {
 		try {
 			File file = new File(fileName);
+			PrintWriter writer = new PrintWriter(file);
+			writer.write("");
+			writer.close();
 			if(!file.exists()) {
 				file.createNewFile();
 			}
-			String content = new Date() + "\n" + new Gson().toJson(problem) + "\n";
+			String content = new Gson().toJson(problem);
 			Files.write(Paths.get(fileName), content.getBytes(), StandardOpenOption.APPEND);
 		} catch(IOException e) {
 			e.printStackTrace();
