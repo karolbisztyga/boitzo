@@ -11,7 +11,8 @@ public class Problem {
 		GREATER_OR_EQUAL,
 		EQUAL,
 		SMALLER_OR_EQUAL,
-		SMALLER
+		SMALLER,
+		ANY
 	};
 	
 	public enum CONDITION_TYPE {
@@ -19,9 +20,27 @@ public class Problem {
 		CONDITION,
 		VARIABLE_SIGN
 	};
-	
+
 	private List<Condition> conditions = new ArrayList<>();
-	
+	private List<Condition> variablesSigns = new ArrayList<>();
+	Condition destinadtionFunction = null;
+
+	public List<Condition> getVariablesSigns() {
+		return variablesSigns;
+	}
+
+	public void setVariablesSigns(List<Condition> variablesSigns) {
+		this.variablesSigns = variablesSigns;
+	}
+
+	public Condition getDestinadtionFunction() {
+		return destinadtionFunction;
+	}
+
+	public void setDestinadtionFunction(Condition destinadtionFunction) {
+		this.destinadtionFunction = destinadtionFunction;
+	}
+
 	public List<Condition> getConditions() {
 		return conditions;
 	}
@@ -37,18 +56,24 @@ public class Problem {
 		private double rightHandValue;
 		private CONDITION_TYPE type;
 		
-		private Condition() {
-			Problem.this.getConditions().add(this);
-		}
-		
 		public Condition(Double[] leftHandValuesArray, RELATION relation, double rightHandValue, CONDITION_TYPE type) {
-			this();
 			this.leftHandValues = Arrays.asList(leftHandValuesArray);
 			this.relation = relation;
 			this.rightHandValue = rightHandValue;
 			this.type = type;
-			if(this.type == CONDITION_TYPE.DESTINATION_FUNCTION) {
-				relation = null;
+			switch(this.type) {
+				case DESTINATION_FUNCTION: {
+					Problem.this.setDestinadtionFunction(this);
+					break;
+				}
+				case CONDITION: {
+					Problem.this.getConditions().add(this);
+					break;
+				}
+				case VARIABLE_SIGN: {
+					Problem.this.getVariablesSigns().add(this);
+					break;
+				}
 			}
 		}
 		
@@ -89,5 +114,13 @@ public class Problem {
 		}
 		
 	}
+
+	@Override
+	public String toString() {
+		return "Problem [conditions=" + conditions + ", variablesSigns=" + variablesSigns + ", destinadtionFunction="
+				+ destinadtionFunction + "]";
+	}
+	
+	
 	
 }
