@@ -13,7 +13,7 @@ import boitzo.Problem.RELATION;
 
 public class ProblemConverter {
 
-	public Problem primitiveToDual(Problem primitive) {
+	public Problem convert(Problem primitive) {
 		Double[][] conds = primitive.getConditions();
 		Problem dual = new Problem(conds[0].length, conds.length);
 		for(int i=0 ; i<conds.length ; ++i) {
