@@ -1,4 +1,4 @@
-package boitzo;
+package converter;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 
 import com.google.gson.Gson;
 
-import boitzo.Problem.RELATION;
+import converter.Problem.RELATION;
 
 public class ProblemConverter {
 

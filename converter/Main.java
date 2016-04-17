@@ -1,6 +1,6 @@
-package boitzo;
+package converter;
 
-import boitzo.Problem.RELATION;
+import converter.Problem.RELATION;
 
 public class Main {
 
@@ -19,7 +19,9 @@ public class Main {
 					RELATION.ANY,
 					RELATION.GREATER_OR_EQUAL
 			};
-			Problem pp = new Problem(d,r);
+			Double[] vc = {0.0,0.0,0.0,0.0};
+			RELATION[] vr = {RELATION.ANY,RELATION.SMALLER_OR_EQUAL,RELATION.ANY,RELATION.GREATER_OR_EQUAL};
+			Problem pp = new Problem(d,r,vc,vr);
 			//Problem p = converter.readFromFile("primitive.txt");
 			converter.saveToFile(pp, "primitive.txt");
 			
