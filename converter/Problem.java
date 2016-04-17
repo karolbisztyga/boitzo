@@ -13,6 +13,9 @@ public class Problem {
 		ANY
 	};
 	
+	/**
+	 * jako ostatnia trzeba podac funkcje celu
+	 */
 	private Double[][] conditions;
 	private Double[] variablesConditions;
 	private RELATION[] variablesRelations;

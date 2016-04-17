@@ -18,20 +18,33 @@ public class ProblemGenerator {
 		Problem result = new Problem(conditions, variables+1);
 		
 		for(int i=0,j=0 ; i<conditions ; ++i) {
-			System.out.println("setting condition " + (i+1));
+			if(i==conditions-1) {
+				System.out.println("setting destination function");
+			} else {
+				System.out.println("setting condition " + (i+1));
+			}
 			for(j=0 ; j<variables ; ++j) {
 				System.out.println("set variable x" + (j+1));
 				result.getConditions()[i][j] = scanner.nextDouble();
 			}
-			System.out.println("set relation");
-			for(int k=0 ; k<RELATION.values().length-1 ; ++k) {
-				System.out.println("["+ k +"]" + RELATION.values()[k]);
+			if(i!=conditions-1) {
+				System.out.println("set relation");
+				for(int k=0 ; k<RELATION.values().length-1 ; ++k) {
+					System.out.println("["+ k +"]" + RELATION.values()[k]);
+				}
+				int relationIndex = scanner.nextInt();
+				if(relationIndex==5) throw new Exception("relation ANY forbidden here");
+				result.getRelations()[i] = RELATION.values()[relationIndex];
+				System.out.println("set righthand value");
+				result.getConditions()[i][j] = scanner.nextDouble();
+			} else {
+				System.out.println("set destination:\n[0] - MIN\n[1] - MAX");
+				double dest = scanner.nextDouble();
+				if(dest != 0.0 && dest != 1.0) {
+					throw new Exception("wrong value");
+				}
+				result.getConditions()[i][j] = (dest == 0.0) ? Double.MIN_VALUE : Double.MAX_VALUE ;
 			}
-			int relationIndex = scanner.nextInt();
-			if(relationIndex==5) throw new Exception("relation ANY forbidden here");
-			result.getRelations()[i] = RELATION.values()[relationIndex];
-			System.out.println("set righthand value");
-			result.getConditions()[i][j] = scanner.nextDouble();
 		}
 		
 		System.out.println("set variables conditions");
