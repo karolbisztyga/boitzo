@@ -1,5 +1,9 @@
 package solver;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import converter.Problem;
 
 public class ProblemSolver {
@@ -10,8 +14,117 @@ public class ProblemSolver {
 		this.problem = problem;
 	}
 
-	public void solve() {
-		//...
+	public Double solve() throws Exception {
+		Double[][] problemConditions = problem.getConditions();
+		List<Double[]> points = new ArrayList<>();
+		for(int i=0 ; i<problemConditions.length-1 ; ++i) {
+			for(int j=i+1 ; j<problemConditions.length-1 ; ++j) {
+				Double[][] conds = new Double[2][];
+				conds[0] = problemConditions[i];
+				conds[1] = problemConditions[j];
+				Double[] point = this.mutualPoint(conds);
+				boolean add = true;
+				//sprawdza czy zmienne sa ok
+				for(int k=0 ; k<2 ; ++k) {
+					switch(problem.getVariablesRelations()[k]) {
+						case EQUAL: {
+							if(point[k] != problem.getVariablesConditions()[k]) {
+								add = false;
+							}
+							break;
+						}
+						case GREATER: {
+							if(point[k] <= problem.getVariablesConditions()[k]) {
+								add = false;
+							}
+							break;
+						}
+						case GREATER_OR_EQUAL: {
+							if(point[k] < problem.getVariablesConditions()[k]) {
+								add = false;
+							}
+							break;
+						}
+						case SMALLER: {
+							if(point[k] >= problem.getVariablesConditions()[k]) {
+								add = false;
+							}
+							break;
+						}
+						case SMALLER_OR_EQUAL: {
+							if(point[k] > problem.getVariablesConditions()[k]) {
+								add = false;
+							}
+							break;
+						}
+						default: {
+							break;
+						}
+					}
+				}
+				if(!add) {
+					break;
+				}
+				//sprawdza czy punkt spelnia wszystkie nierownosci
+				for(int k=0 ; k<problemConditions.length-1 ; ++k) {
+					Double[] cond = problemConditions[k];
+					switch(problem.getRelations()[k]) {
+						case EQUAL: {
+							if(cond[0]*point[0] + cond[1]*point[1] != cond[2]) {
+								add = false;
+							}
+							break;
+						}
+						case GREATER: {
+							if(cond[0]*point[0] + cond[1]*point[1] <= cond[2]) {
+								add = false;
+							}
+							break;
+						}
+						case GREATER_OR_EQUAL: {
+							if(cond[0]*point[0] + cond[1]*point[1] < cond[2]) {
+								add = false;
+							}
+							break;
+						}
+						case SMALLER: {
+							if(cond[0]*point[0] + cond[1]*point[1] >= cond[2]) {
+								add = false;
+							}
+							break;
+						}
+						case SMALLER_OR_EQUAL: {
+							if(cond[0]*point[0] + cond[1]*point[1] <= cond[2]) {
+								add = false;
+							}
+							break;
+						}
+						default: {
+							break;
+						}
+					}
+					if(!add) {
+						break;
+					}
+				}
+				if(add) {
+					points.add(point);
+				}
+			}
+		}
+		List<Double> destinationValues = new ArrayList<>();
+		for(Double[] point : points) {
+			destinationValues.add(problemConditions[problemConditions.length-1][0]*point[0]+
+					problemConditions[problemConditions.length-1][1]*point[1]);
+		}
+		if(destinationValues.isEmpty()) {
+			return null;
+		}
+		if(problemConditions[problemConditions.length-1][2] == Double.MAX_VALUE) {
+			return Collections.max(destinationValues);
+		} else {
+			return Collections.min(destinationValues);
+		}
 	}
 	
 	public Double[] mutualPoint(Double[][] conditions) throws Exception {
