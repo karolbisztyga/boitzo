@@ -31,15 +31,32 @@ public class ProblemConverter {
 			RELATION rel = primitive.getRelations()[i];
 			switch(rel) {
 				case EQUAL: {
-					dual.getRelations()[i] = RELATION.ANY;
+					dual.getVariablesRelations()[i] = RELATION.ANY;
 					break;
 				}
 				case ANY: {
-					dual.getRelations()[i] = RELATION.EQUAL;
+					dual.getVariablesRelations()[i] = RELATION.EQUAL;
 					break;
 				}
-				default: {
-					dual.getRelations()[i] = rel;
+				case GREATER_OR_EQUAL:
+				case GREATER: {
+					if(primitive.getConditions()[primitive.getConditions().length-1][primitive.getConditions()[0].length-1] == 
+							Double.MIN_VALUE) {
+						dual.getVariablesRelations()[i] = RELATION.GREATER_OR_EQUAL;
+					} else {
+						dual.getVariablesRelations()[i] = RELATION.SMALLER_OR_EQUAL;
+					}
+					break;
+				}
+				case SMALLER_OR_EQUAL:
+				case SMALLER: {
+					if(primitive.getConditions()[primitive.getConditions().length-1][primitive.getConditions()[0].length-1] == 
+							Double.MAX_VALUE) {
+						dual.getVariablesRelations()[i] = RELATION.GREATER_OR_EQUAL;
+					} else {
+						dual.getVariablesRelations()[i] = RELATION.SMALLER_OR_EQUAL;
+					}
+					break;
 				}
 			}
 		}
