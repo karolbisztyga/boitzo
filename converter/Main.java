@@ -27,10 +27,10 @@ public class Main {
 			
 			Problem pd = converter.convert(pp);
 			converter.saveToFile(pd, "dual.txt");
-			/*
+
 			Problem dualRead = converter.readFromFile("dual.txt");
 			Problem primitiveRead = converter.convert(dualRead);
-			converter.saveToFile(primitiveRead, "primitive2.txt");*/
+			converter.saveToFile(primitiveRead, "primitive2.txt");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

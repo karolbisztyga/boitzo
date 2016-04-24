@@ -63,6 +63,7 @@ public class ProblemConverter {
 		}
 		for(int i=0 ; i<primitive.getVariablesRelations().length ; ++i) {
 			RELATION rel = primitive.getVariablesRelations()[i];
+			if(rel == null) continue;
 			switch(rel) {
 				case EQUAL: {
 					dual.getRelations()[i] = RELATION.ANY;
