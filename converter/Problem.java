@@ -38,6 +38,9 @@ public class Problem {
 		this.relations = new RELATION[conditions];
 		this.variablesConditions = new Double[variables];
 		this.variablesRelations = new RELATION[variables];
+		for(int i=0 ; i<this.variablesConditions.length ; ++i) {
+			this.variablesConditions[i] = 0.0;
+		}
 	}
 
 	public Double[][] getConditions() {

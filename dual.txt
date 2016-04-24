@@ -1,1 +1,0 @@
-{"conditions":[[1.0,5.0,2.0,4.0],[8.0,-2.0,5.0,3.0],[3.0,0.0,-4.0,-2.0],[2.0,6.0,3.0,1.0],[25.0,4.0,7.0,4.9E-324]],"variablesConditions":[null,null,null,null],"variablesRelations":[null,null,null,null],"relations":["GREATER_OR_EQUAL","SMALLER_OR_EQUAL","EQUAL","GREATER_OR_EQUAL",null]}

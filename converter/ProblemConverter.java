@@ -29,6 +29,7 @@ public class ProblemConverter {
 		}
 		for(int i=0 ; i<primitive.getRelations().length ; ++i) {
 			RELATION rel = primitive.getRelations()[i];
+			if(rel == null) continue;
 			switch(rel) {
 				case EQUAL: {
 					dual.getVariablesRelations()[i] = RELATION.ANY;
@@ -51,10 +52,43 @@ public class ProblemConverter {
 				case SMALLER_OR_EQUAL:
 				case SMALLER: {
 					if(primitive.getConditions()[primitive.getConditions().length-1][primitive.getConditions()[0].length-1] == 
-							Double.MAX_VALUE) {
-						dual.getVariablesRelations()[i] = RELATION.GREATER_OR_EQUAL;
-					} else {
+							Double.MIN_VALUE) {
 						dual.getVariablesRelations()[i] = RELATION.SMALLER_OR_EQUAL;
+					} else {
+						dual.getVariablesRelations()[i] = RELATION.GREATER_OR_EQUAL;
+					}
+					break;
+				}
+			}
+		}
+		for(int i=0 ; i<primitive.getVariablesRelations().length ; ++i) {
+			RELATION rel = primitive.getVariablesRelations()[i];
+			switch(rel) {
+				case EQUAL: {
+					dual.getRelations()[i] = RELATION.ANY;
+					break;
+				}
+				case ANY: {
+					dual.getRelations()[i] = RELATION.EQUAL;
+					break;
+				}
+				case GREATER_OR_EQUAL:
+				case GREATER: {
+					if(dual.getConditions()[dual.getConditions().length-1][dual.getConditions()[0].length-1] == 
+							Double.MIN_VALUE) {
+						dual.getRelations()[i] = RELATION.GREATER_OR_EQUAL;
+					} else {
+						dual.getRelations()[i] = RELATION.SMALLER_OR_EQUAL;
+					}
+					break;
+				}
+				case SMALLER_OR_EQUAL:
+				case SMALLER: {
+					if(dual.getConditions()[dual.getConditions().length-1][dual.getConditions()[0].length-1] == 
+							Double.MAX_VALUE) {
+						dual.getRelations()[i] = RELATION.GREATER_OR_EQUAL;
+					} else {
+						dual.getRelations()[i] = RELATION.SMALLER_OR_EQUAL;
 					}
 					break;
 				}
